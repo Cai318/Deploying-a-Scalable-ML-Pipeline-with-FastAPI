@@ -1,28 +1,47 @@
 import pytest
-# TODO: add necessary import
-
-# TODO: implement the first test. Change the function name and input as needed
-def test_one():
-    """
-    # add description for the first test
-    """
-    # Your code here
-    pass
+import numpy as np
+from ml.model import compute_model_metrics, train_model, inference
+from sklearn.ensemble import RandomForestClassifier
 
 
-# TODO: implement the second test. Change the function name and input as needed
-def test_two():
+def test_compute_model_metrics():
     """
-    # add description for the second test
+    Test compute model metrics returns correct values
     """
-    # Your code here
-    pass
+    y_true = np.array([1,0,1,0])
+    y_pred = np.array([1,0,1,0])
+
+    precision, recall, fbeta = compute_model_metrics(y_true, y_pred)
+
+    assert recall == 1.0
+    assert precision == 1.0
+    assert fbeta == 1.0
 
 
-# TODO: implement the third test. Change the function name and input as needed
-def test_three():
+def test_train_model():
     """
-    # add description for the third test
+    Test trained model is a RandomForestClassifier instance
     """
-    # Your code here
-    pass
+    X_train = np.array([[0,1],[1,0],[0,0],[1,1]])
+    y_train = np.array([0,1,0,1])
+
+    model = train_model(X_train, y_train)
+
+    assert isinstance(model, RandomForestClassifier), "Expected RandomForestClassifier"
+ 
+
+def test_inference():
+    """
+    Test inference returns valid predicted values
+    """
+
+    X_train = np.array([[0,0],[1,1]])
+    y_train = np.array([0,1])
+    X_test = np.array([[0,1],[1,0]])
+
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X_train, y_train) 
+    
+    preds = inference(model, X_test)
+
+    assert set(preds).issubset({1,0}), "Expected values are 1 and 0"
